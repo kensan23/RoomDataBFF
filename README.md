@@ -29,16 +29,16 @@ template and continuously deploy it to AWS Lambda. Here's what's been added:
   * Log into AWS (this requires you to [configure AWS creds in GitHub][aws-action])
   * Use CloudFormation to deploy the Lambda function and HTTP API
   
-* [`src/HelloWorld/Program.cs`](src/HelloWorld/Program.cs): This file has been
+* [`src/RoomDataBFF/Program.cs`](src/RoomDataBFF/Program.cs): This file has been
   refactored to support the slightly different way that an ASP.Net Core app is
   started in Lambda. You shouldn't need to touch this file at all, except for
   changing logging.
   
-* [`src/HelloWorld/Startup.cs`](src/HelloWorld/Startup.cs): The only change to
+* [`src/RoomDataBFF/Startup.cs`](src/RoomDataBFF/Startup.cs): The only change to
   this file is to add a (trivial) dependency-injected `IValuesService` to demonstrate
   integration testing in the test project.
   
-* [`test/HelloWorld.Tests/TestValuesController.cs`](test/HelloWorld.Tests/TestValuesController.cs): 
+* [`test/RoomDataBFF.Tests/TestValuesController.cs`](test/RoomDataBFF.Tests/TestValuesController.cs): 
   This file demonstrates [ASP.Net Core integration tests][anc-tests] in the style
   made possible by `Microsoft.AspNetCore.Mvc.Testing`. A mock `IValuesService` 
   is injected. This shows that tests don't have to be written any differently 

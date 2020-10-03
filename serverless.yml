@@ -4,8 +4,8 @@ Resources:
   Function:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: HelloWorld::HelloWorld.LambdaHandler::FunctionHandlerAsync
-      CodeUri: src/HelloWorld/bin/Release/netcoreapp3.1/HelloWorld.zip
+      Handler: RoomDataBFF::RoomDataBFF.LambdaHandler::FunctionHandlerAsync
+      CodeUri: src/RoomDataBFF/bin/Release/netcoreapp3.1/RoomDataBFF.zip
       Runtime: dotnetcore3.1
       MemorySize: 512
       Timeout: 20

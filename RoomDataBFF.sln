@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A16544E-F5A7-4566-B239-1CC3DC3DD96E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "src\HelloWorld\HelloWorld.csproj", "{5BD04563-46D9-4D5B-BCE5-667789E2BBEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomDataBFF", "src\RoomDataBFF\RoomDataBFF.csproj", "{5BD04563-46D9-4D5B-BCE5-667789E2BBEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{114EAE3F-4A6E-4446-B4DE-73660768E258}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Tests", "test\HelloWorld.Tests\HelloWorld.Tests.csproj", "{8251D2E8-2A62-4D65-89AD-F738437B91C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomDataBFF.Tests", "test\RoomDataBFF.Tests\RoomDataBFF.Tests.csproj", "{8251D2E8-2A62-4D65-89AD-F738437B91C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

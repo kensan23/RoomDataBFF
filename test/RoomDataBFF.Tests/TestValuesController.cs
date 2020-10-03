@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace HelloWorld.Tests
+namespace RoomDataBFF.Tests
 {
     public class TestValuesController : IClassFixture<WebApplicationFactory<Startup>>
     {
@@ -23,7 +23,7 @@ namespace HelloWorld.Tests
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddSingleton<IValuesService, TestValuesService>();
+                    services.AddSingleton<IRoomDataService, TestValuesService>();
                 });
             }).CreateClient();
 
@@ -32,11 +32,13 @@ namespace HelloWorld.Tests
         }
     }
 
-    public class TestValuesService : IValuesService
+    public class TestValuesService : IRoomDataService
     {
-        public IEnumerable<string> GetValues()
+ 
+
+        Task<IEnumerable<string>> IRoomDataService.GetValues()
         {
-            return new List<string> {"value1"};
+            throw new System.NotImplementedException();
         }
     }
 }

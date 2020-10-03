@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace HelloWorld
+namespace RoomDataBFF
 {
     public class Startup
     {
@@ -19,7 +19,7 @@ namespace HelloWorld
         {
             services.AddControllers();
 
-            services.AddSingleton<IValuesService, ValuesService>();
+            services.AddSingleton<IRoomDataService, RoomDataService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

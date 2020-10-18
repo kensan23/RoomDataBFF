@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
 
@@ -12,6 +13,16 @@ namespace RoomDataBFF.Models
 
         [DynamoDBRangeKey("datetimeunix")]
         public double DateTimeUnix { get; set; }
+
+        public DateTime DateTimeUTC
+        {
+            get
+            {
+                DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                return origin.AddSeconds(DateTimeUnix);
+            }
+            set { this.DateTimeUTC = value; }
+        }
 
         [DynamoDBProperty("airquality_percent")]
         public decimal AirQualityPercent { get; set; }

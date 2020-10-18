@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +19,10 @@ namespace RoomDataBFF
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonDynamoDB>();
+            services.AddTransient<IDynamoDBContext, DynamoDBContext>();
             services.AddControllers();
-
             services.AddSingleton<IRoomDataService, RoomDataService>();
         }
 

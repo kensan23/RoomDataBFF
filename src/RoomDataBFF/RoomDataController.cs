@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RoomDataBFF.Models;
 
 namespace RoomDataBFF
 {
@@ -17,9 +18,9 @@ namespace RoomDataBFF
 
         // GET api/values
         [HttpGet]
-        public async Task<IEnumerable<string>> Get()
+        public async Task<IEnumerable<RoomData>> Get()
         {
-            return await _values.GetValues();
+            return await _values.GetRoomDataByInterval();
         }
 
         // GET api/values/5

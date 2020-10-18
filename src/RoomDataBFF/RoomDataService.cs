@@ -6,89 +6,80 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using RoomDataBFF.Models;
+using RoomDataBFF.Repository;
 
 namespace RoomDataBFF
 {
     public interface IRoomDataService
     {
-        Task<IEnumerable<string>> GetValues();
+        Task<IEnumerable<RoomData>> GetRoomDataByInterval();
+        Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUTC(string roomId, DateTime fromUtc, DateTime toUtc);
     }
 
     public class RoomDataService : IRoomDataService
     {
-        public async Task<IEnumerable<string>> GetValues()
+
+        private IRoomDataRepository _roomDataRepository;
+        public RoomDataService(IRoomDataRepository roomDataRepository)
         {
-            AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+            this._roomDataRepository = roomDataRepository;
+        }
 
-            DynamoDBContext context = new DynamoDBContext(client);
+        public async Task<IEnumerable<RoomData>> GetRoomDataByInterval()
+        {
+            //AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-            FindRepliesInLast15Days(context, "StudyNorth");
+            //   DynamoDBContext context = new DynamoDBContext(client);
 
-            // var request = new QueryRequest
-            // {
-            //     TableName = "RoomData",
-            //     KeyConditionExpression = "roomid = :v_Id and datetimeunix BETWEEN :t1 AND :t2",
-            //     ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
-            //     {":v_Id", new AttributeValue { S =  "StudyNorth" }},
-            //      {":t1", new AttributeValue { N =  "1600171921.772" }},
-            //       {":t2", new AttributeValue { N =  "1600172161.303" }
-            //     }}
-            // };
-
-            // var response = await client.QueryAsync(request);
-            // System.Console.WriteLine(response.Items.Count);
-            //Console.WriteLine("\nNo. of reads used (by query in FindRepliesPostedWithinTimePeriod) {0}",
-            //            response.ConsumedCapacity.CapacityUnits);
-            // foreach (Dictionary<string, AttributeValue> item in response.Items)
-            // {
-            //     // Process the result.
-            //     foreach (var keyValuePair in item)
-            //     {
-            //         var lines = item.Select(x=>x.Key + ":" + x.Value);
-            //         System.Console.WriteLine(String.Join(Environment.NewLine,lines));
-            //     }
-            // }
-            return new List<string>
-            {
-                "value1",
-                "value2"
-            };
+            return await GetRoomDataByIdAndDateUTC("StudyNorth", DateTime.Now, DateTime.Now);
 
         }
-        private async Task FindRepliesInLast15Days(DynamoDBContext context,
-                                string forumName)
+        public async Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUTC(string roomId, DateTime fromUtc, DateTime toUtc)
         {
-            DateTime twoWeeksAgoDate = DateTime.UtcNow - TimeSpan.FromDays(15);
-            // List<string> lists = new List<string>() { 1600171921.772, 1600172161.303 };
-            try
-            {
-                System.Console.WriteLine("\nFindRepliesInLast15Days: Printing result.....");
-                var latestReplies =
-                       await context.QueryAsync<RoomData>(forumName,
-                        QueryOperator.Between,
-                         new object[] { 1600170541.25, 1601170541.25 }
-                         ).GetRemainingAsync();
-                System.Console.WriteLine("\nFindRepliesInLast15Days: Printing result.....");
-                foreach (RoomData r in latestReplies)
-                    System.Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
-                    r.RoomId,
-                    r.DateTimeUnix,
-                    r.AirQualityPercent,
-                    r.HumidityPercent,
-                    r.GasResistanceOhms,
-                    r.HumidityPercent,
-                    r.PressureHpa,
-                    r.TemperatureCelsius);
-            }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e.Message);
-                System.Console.WriteLine(e.StackTrace);
 
-            }
-
-
-
+            double fromUnixTime = new DateTimeOffset(fromUtc).ToUnixTimeSeconds();
+            double toUnixTime = new DateTimeOffset(toUtc).ToUnixTimeSeconds();
+            var latestReplies = await _roomDataRepository.GetRoomDataByIdAndUnixDateAsync(roomId, fromUnixTime, toUnixTime);
+            return latestReplies;
         }
+
+        public async Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUnix(string roomId, double fromUtc, double toUtc)
+        {
+            var latestReplies = await _roomDataRepository.GetRoomDataByIdAndUnixDateAsync(roomId, fromUtc, toUtc);
+            return latestReplies;
+        }
+
+        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByDateUTC(string roomId, DateTime fromUtc, DateTime toUtc)
+        {
+            var data = await GetRoomDataByIdAndDateUTC(roomId, fromUtc, toUtc);
+            return GetRoomSummaryData(data);
+        }
+
+        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc)
+        {
+            var data = await GetRoomDataByIdAndDateUnix(roomId, fromUtc, toUtc);
+            return GetRoomSummaryData(data);
+        }
+
+        private static IEnumerable<RoomDataSummary> GetRoomSummaryData(IEnumerable<RoomData> roomData)
+        {
+            return roomData
+           .GroupBy(m => new { m.DateTimeUTC.Month, m.DateTimeUTC.Year })
+           .Select(x =>
+            new RoomDataSummary
+            {
+                RoomId = x.FirstOrDefault().RoomId,
+                Month = x.FirstOrDefault().DateTimeUTC.Month,
+                Year = x.FirstOrDefault().DateTimeUTC.Year,
+                AirQualityPercentAverage = x.Average(a => a.AirQualityPercent),
+                GasResistanceOhmsAverage = x.Average(a => a.GasResistanceOhms),
+                HumidityPercentAverage = x.Average(a => a.HumidityPercent),
+                PressureHpaAverage = x.Average(a => a.PressureHpa),
+                TemperatureCelsiusAverage = x.Average(a => a.TemperatureCelsius),
+            });
+        }
+
     }
+
+
 }

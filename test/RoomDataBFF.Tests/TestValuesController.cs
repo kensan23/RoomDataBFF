@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using RoomDataBFF.Models;
 using Xunit;
 
 namespace RoomDataBFF.Tests
@@ -34,9 +35,12 @@ namespace RoomDataBFF.Tests
 
     public class TestValuesService : IRoomDataService
     {
- 
+        public Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUTC(string roomId, System.DateTime fromUtc, System.DateTime toUtc)
+        {
+            throw new System.NotImplementedException();
+        }
 
-        Task<IEnumerable<string>> IRoomDataService.GetValues()
+        Task<IEnumerable<RoomData>> IRoomDataService.GetRoomDataByInterval()
         {
             throw new System.NotImplementedException();
         }

@@ -97,11 +97,11 @@ namespace RoomDataBFF.Tests
                // output.WriteLine(testData.DateTimeUTC.ToLocalTime().ToString());
             }
             var repo = new Mock<IRoomDataRepository>();
-            repo.Setup(x =>x.GetRoomDataByIdAndUnixDateAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            repo.Setup(x =>x.GetRoomDataByIdAndUnixDateAsync(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>()))
             .ReturnsAsync(data);
 
             var service = new RoomDataService(repo.Object);
-            var result = await service.GetRoomDataSummaryByUnixDate("blah",1, 2);
+            var result = await service.GetRoomDataSummaryByUnixDate("blah",1.5, 2.3);
             foreach (var group in result)
             {
                 output.WriteLine(JsonSerializer.Serialize<RoomDataSummary>(group));

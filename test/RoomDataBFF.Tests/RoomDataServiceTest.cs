@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.Runtime;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RoomDataBFF.Models;
 using RoomDataBFF.Repository;
@@ -47,7 +42,6 @@ namespace RoomDataBFF.Tests
         public async Task TestSomeMoo()
         {
             var result = await _roomService.GetRoomDataByIdAndDateUTC("StudyNorth", DateTime.Now.AddHours(-1), DateTime.Now);
-            //output.WriteLine($"*************{result.Count()}***************");
             foreach (var item in result)
             {
                 output.WriteLine(JsonSerializer.Serialize<RoomData>(item));
@@ -75,7 +69,6 @@ namespace RoomDataBFF.Tests
                 };
                 startDate += 2592000; //add one month
                 data.Add(testData);
-                //output.WriteLine(testData.DateTimeUTC.ToLocalTime().ToString());
             }
             startDate = 1571295921;
 
@@ -94,14 +87,13 @@ namespace RoomDataBFF.Tests
                 };
                 startDate += 2592000; //add one month
                 data.Add(testData);
-               // output.WriteLine(testData.DateTimeUTC.ToLocalTime().ToString());
             }
             var repo = new Mock<IRoomDataRepository>();
             repo.Setup(x =>x.GetRoomDataByIdAndUnixDateAsync(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>()))
             .ReturnsAsync(data);
 
             var service = new RoomDataService(repo.Object);
-            var result = await service.GetRoomDataSummaryByUnixDate("blah",1.5, 2.3);
+            var result = await service.GetRoomDataSummaryByUnixDate("blah",1.5, 2.3, m => new {m.DateTimeUTC.Month, m.DateTimeUTC.Year});
 
             var actual = result.First();
             Assert.Equal(expected, actual.TemperatureCelsiusAverage);
@@ -118,14 +110,14 @@ namespace RoomDataBFF.Tests
         [Fact]
         public void TestDateConvert()
         {
-            var expected = "10/17/2020 17:31:01";
+            var expected = "10/17/2020 06:31:01";
 
             RoomData testData = new RoomData
             {
                 DateTimeUnix = 1602916261.174
             };
 
-            Assert.Equal(expected, testData.DateTimeUTC.ToLocalTime().ToString());
+            Assert.Equal(expected, testData.DateTimeUTC.ToString());
         }
     }
 }

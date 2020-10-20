@@ -49,16 +49,16 @@ namespace RoomDataBFF
             return latestReplies;
         }
 
-        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByDateUTC(string roomId, DateTime fromUtc, DateTime toUtc)
+        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByDateUTC(string roomId, DateTime fromUtc, DateTime toUtc, Func<RoomData, object> groupProperty)
         {
             var data = await GetRoomDataByIdAndDateUTC(roomId, fromUtc, toUtc);
-            return GetRoomSummaryData(data, m => new {m.DateTimeUTC.Month, m.DateTimeUTC.Year});
+            return GetRoomSummaryData(data, groupProperty);
         }
 
-        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc)
+        public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc, Func<RoomData, object> groupProperty)
         {
             var data = await GetRoomDataByIdAndDateUnix(roomId, fromUtc, toUtc);
-            return GetRoomSummaryData(data, m => new {m.DateTimeUTC.Month, m.DateTimeUTC.Year});
+            return GetRoomSummaryData(data, groupProperty);
         }
 
         private static IEnumerable<RoomDataSummary> GetRoomSummaryData(IEnumerable<RoomData> roomData, Func<RoomData, object> groupProperty)

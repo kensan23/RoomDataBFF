@@ -57,7 +57,7 @@ namespace RoomDataBFF.Tests
         [Fact]
         public async Task TestDate()
         {
-            //var expected = "10/17/2020 17:31:01";
+            var expected = 50m;
             List<RoomData> data = new List<RoomData>();
             var startDate = 1571295921;
             for (int i = 0; i < 12; i++)
@@ -102,12 +102,9 @@ namespace RoomDataBFF.Tests
 
             var service = new RoomDataService(repo.Object);
             var result = await service.GetRoomDataSummaryByUnixDate("blah",1.5, 2.3);
-            foreach (var group in result)
-            {
-                output.WriteLine(JsonSerializer.Serialize<RoomDataSummary>(group));
-            }
 
-
+            var actual = result.First();
+            Assert.Equal(expected, actual.TemperatureCelsiusAverage);
         }
     }
 

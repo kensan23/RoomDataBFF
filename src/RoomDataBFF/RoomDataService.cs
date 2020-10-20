@@ -52,19 +52,19 @@ namespace RoomDataBFF
         public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByDateUTC(string roomId, DateTime fromUtc, DateTime toUtc)
         {
             var data = await GetRoomDataByIdAndDateUTC(roomId, fromUtc, toUtc);
-            return GetRoomSummaryData(data);
+            return GetRoomSummaryData(data, m => new {m.DateTimeUTC.Month, m.DateTimeUTC.Year});
         }
 
         public async Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc)
         {
             var data = await GetRoomDataByIdAndDateUnix(roomId, fromUtc, toUtc);
-            return GetRoomSummaryData(data);
+            return GetRoomSummaryData(data, m => new {m.DateTimeUTC.Month, m.DateTimeUTC.Year});
         }
 
-        private static IEnumerable<RoomDataSummary> GetRoomSummaryData(IEnumerable<RoomData> roomData)
+        private static IEnumerable<RoomDataSummary> GetRoomSummaryData(IEnumerable<RoomData> roomData, Func<RoomData, object> groupProperty)
         {
             return roomData
-           .GroupBy(m => new { m.DateTimeUTC.Month, m.DateTimeUTC.Year })
+           .GroupBy(groupProperty)
            .Select(x =>
             new RoomDataSummary
             {

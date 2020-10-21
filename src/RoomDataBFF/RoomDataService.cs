@@ -12,8 +12,13 @@ namespace RoomDataBFF
 {
     public interface IRoomDataService
     {
-        Task<IEnumerable<RoomData>> GetRoomDataByInterval();
         Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUTC(string roomId, DateTime fromUtc, DateTime toUtc);
+
+        Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUnix(string roomId, double fromUtc, double toUtc);
+
+        Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByDateUTC(string roomId, DateTime fromUtc, DateTime toUtc, Func<RoomData, object> groupProperty);
+
+        Task<IEnumerable<RoomDataSummary>> GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc, Func<RoomData, object> groupProperty);
     }
 
     public class RoomDataService : IRoomDataService
@@ -25,15 +30,6 @@ namespace RoomDataBFF
             this._roomDataRepository = roomDataRepository;
         }
 
-        public async Task<IEnumerable<RoomData>> GetRoomDataByInterval()
-        {
-            //AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-
-            //   DynamoDBContext context = new DynamoDBContext(client);
-
-            return await GetRoomDataByIdAndDateUTC("StudyNorth", DateTime.Now, DateTime.Now);
-
-        }
         public async Task<IEnumerable<RoomData>> GetRoomDataByIdAndDateUTC(string roomId, DateTime fromUtc, DateTime toUtc)
         {
 

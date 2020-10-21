@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +10,24 @@ namespace RoomDataBFF
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
     {
-        private readonly IRoomDataService _values;
+        private readonly IRoomDataService _roomService;
 
-        public ValuesController(IRoomDataService values)
+        public ValuesController(IRoomDataService roomservice)
         {
-            _values = values;
+            _roomService = roomservice;
         }
 
         // GET api/values
-        [HttpGet]
-        public async Task<IEnumerable<RoomData>> Get()
+        [HttpGet("{roomId")]
+        public async Task<IEnumerable<RoomData>> GetByIdDate(string roomId, DateTime fromDateTimeUtc, DateTime toDateTimeUtc)
         {
-            return await _values.GetRoomDataByInterval();
+            return await _roomService.GetRoomDataByIdAndDateUTC(roomId, fromDateTimeUtc, toDateTimeUtc);
         }
 
-        // GET api/values/5
-
+        [HttpGet("{roomId")]
+        public async Task<IEnumerable<RoomData>> GetByIdDateUnix(string roomId, double fromDateTimeUnix, double toDateTimeUnix)
+        {
+            return await _roomService.GetRoomDataByIdAndDateUnix(roomId, fromDateTimeUnix, toDateTimeUnix);
+        }
     }
 }

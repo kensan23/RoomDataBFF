@@ -8,11 +8,11 @@ using RoomDataBFF.Models;
 namespace RoomDataBFF
 {
     [Route("api/[controller]")]
-    public class ValuesController : ControllerBase
+    public class RoomDataController : ControllerBase
     {
         private readonly IRoomDataService _roomService;
 
-        public ValuesController(IRoomDataService roomservice)
+        public RoomDataController(IRoomDataService roomservice)
         {
             _roomService = roomservice;
         }

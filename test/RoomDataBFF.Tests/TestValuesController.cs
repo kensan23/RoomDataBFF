@@ -40,7 +40,22 @@ namespace RoomDataBFF.Tests
             throw new System.NotImplementedException();
         }
 
-        Task<IEnumerable<RoomData>> IRoomDataService.GetRoomDataByInterval()
+        Task<IEnumerable<RoomData>> IRoomDataService.GetRoomDataByIdAndDateUnix(string roomId, double fromUtc, double toUtc)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<IEnumerable<RoomData>> IRoomDataService.GetRoomDataByIdAndDateUTC(string roomId, System.DateTime fromUtc, System.DateTime toUtc)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<IEnumerable<RoomDataSummary>> IRoomDataService.GetRoomDataSummaryByDateUTC(string roomId, System.DateTime fromUtc, System.DateTime toUtc, System.Func<RoomData, object> groupProperty)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<IEnumerable<RoomDataSummary>> IRoomDataService.GetRoomDataSummaryByUnixDate(string roomId, double fromUtc, double toUtc, System.Func<RoomData, object> groupProperty)
         {
             throw new System.NotImplementedException();
         }

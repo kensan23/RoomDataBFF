@@ -18,15 +18,17 @@ namespace RoomDataBFF
         }
 
         // GET api/values
-        [HttpGet("{roomId")]
+        [HttpGet("{roomId}")]
         public async Task<IEnumerable<RoomData>> GetByIdDate(string roomId, DateTime fromDateTimeUtc, DateTime toDateTimeUtc)
         {
+            System.Console.WriteLine(roomId);
             return await _roomService.GetRoomDataByIdAndDateUTC(roomId, fromDateTimeUtc, toDateTimeUtc);
         }
 
-        [HttpGet("{roomId")]
+        [HttpGet("{roomId}")]
         public async Task<IEnumerable<RoomData>> GetByIdDateUnix(string roomId, double fromDateTimeUnix, double toDateTimeUnix)
         {
+            System.Console.WriteLine(roomId);
             return await _roomService.GetRoomDataByIdAndDateUnix(roomId, fromDateTimeUnix, toDateTimeUnix);
         }
     }

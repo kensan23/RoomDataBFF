@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RoomDataBFF.Repository;
 
 namespace RoomDataBFF
 {
@@ -22,8 +23,9 @@ namespace RoomDataBFF
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonDynamoDB>();
             services.AddTransient<IDynamoDBContext, DynamoDBContext>();
-            services.AddControllers();
+            services.AddSingleton<IRoomDataRepository, DynamoRoomDataRepository>();
             services.AddSingleton<IRoomDataService, RoomDataService>();
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
